@@ -5,7 +5,8 @@ var searchInput = document.getElementById('city-input');
 var cityInput = $("#city-input").val();
 var searchBtn = document.getElementById("search-btn");
 var APIkey = "&appid=47523fcfa432220823eeddae011ae353";
-var api = "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/weather?q="
+var api = "https://api.openweathermap.org/data/2.5/weather?q="
+
 
 //used to check function
 var searches = [];
