@@ -12,3 +12,4 @@ lower card deck includes temp, wind, and humidity data for the next 5-day-foreca
 
 recent searches are included in local storage and will remain in list even on page reload
 
+

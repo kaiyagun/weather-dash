@@ -12,7 +12,7 @@ var api = "http://api.openweathermap.org/data/2.5/weather?q="
 var searches = [];
 var recentList = document.getElementById('recent-search');
 
-
+//click event 
 searchBtn.addEventListener("click", function(event) {
     event.preventDefault();
     console.log(searchInput.value)
@@ -44,10 +44,32 @@ function getWeather() {
                 document.getElementById('wind').innerHTML = wind + "mph";
                 document.getElementById('humid').innerHTML = humid + "%";
                 document.getElementById('desc').innerHTML = desc;
-            });
+
+            //     for (i = 0; i < 5; i++) {
+            //         var nextDay = moment()
+            //           .add(i + 1, 'd')
+            //           .format('M/DD/YYYY');
+            //         var buildFiveDay = $('#day' + i);
+            //         buildFiveDay.append(`<div>${nextDay}</div>`);
+            //         var futureWeatherIcon = data['daily'][i].weather[0]['icon'];
+            //         buildFiveDay.append(
+            //           `<img src="http://openweathermap.org/img/wn/${futureWeatherIcon}@2x.png" alt="weather icon" style="width:30px;height:30px;">`
+            //         );
+            //         buildFiveDay.append(
+            //           '<div>Temp: ' + data['daily'][i].temp.day + '°F</div>'
+            //         );
+            //         buildFiveDay.append(
+            //           '<div>Wind: ' + data['daily'][i].wind_speed + '</div>'
+            //         );
+            //         buildFiveDay.append(
+            //           '<div>Humidity: ' + data['daily'][i].humidity + '</div>'
+                   
+                  
+                });
+            };
         
-        };
-    });
+        });
+   
 };
 
 //puts search value into localstorage
