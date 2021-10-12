@@ -1,107 +1,114 @@
 console.log("what's up");
 
 //input vars
-var searchInput = document.getElementById('city-input');
+var searchInput = document.getElementById("city-input");
 var cityInput = $("#city-input").val();
 var searchBtn = document.getElementById("search-btn");
 var APIkey = "&appid=47523fcfa432220823eeddae011ae353";
-var api = "https://api.openweathermap.org/data/2.5/weather?q="
+var api = "https://api.openweathermap.org/data/2.5/weather?q=";
 
+var dayOne = $("#day-one");
+var dayTwo = $("#day-two");
+var dayThree = $("#day-three");
+var dayFour = $("#day-four");
+var dayFive = $("#day-five");
+
+var fiveDays = [dayOne, dayTwo, dayThree, dayFour, dayFive];
 
 //used to check function
 var searches = [];
-var recentList = document.getElementById('recent-search');
+var recentList = document.getElementById("recent-search");
 
-//click event 
-searchBtn.addEventListener("click", function(event) {
-    event.preventDefault();
-    console.log(searchInput.value)
-    getWeather();
-    storeInput();
-    renderLastSearch();
+//click event
+searchBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  console.log(searchInput.value);
+  getWeather();
+  storeInput();
+  renderLastSearch();
+  getLatLong();
 });
 
-
-
-function getWeather() {
-
-    var url = api + searchInput.value + "&units=imperial" + APIkey;
-    console.log(url);
+//get search city and gets lat and long from api
+function getLatLong () {
+    var url = api + searchInput.value + APIkey;
 
     fetch(url)
     .then(function (response) {
         if (response.ok) {
-            
-            response.json().then(data => {
-                var nameValue = data['name'];
-                var temp = data['main']['temp'];
-                var wind = data['wind']['speed'];
-                var humid = data['main']['humidity'];
-                var desc = data['weather'][0]['description'];
+            return response.json();
+        }
+    })
+    .then(function (data) {
+        latitude = data.coord.lat;
+        longitude = data.coord.lon;
+        fiveDay();
+    })
+}
 
-                document.getElementById('temp').innerHTML = temp + "°F";
-                document.getElementById('current-search-city').innerHTML = nameValue;
-                document.getElementById('wind').innerHTML = wind + "mph";
-                document.getElementById('humid').innerHTML = humid + "%";
-                document.getElementById('desc').innerHTML = desc;
+//puts lat and long to get 5 day response, appends to cards
+function fiveDay() {
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=47523fcfa432220823eeddae011ae353`).then(function (response) {
+        if (response.ok) {
+            response.json().then((data) => {
+                var day = moment(["list"]["dt"]).format("MMMM Do");
+                console.log(day);
+            })
+        }
+    })
+}
 
-            //     for (i = 0; i < 5; i++) {
-            //         var nextDay = moment()
-            //           .add(i + 1, 'd')
-            //           .format('M/DD/YYYY');
-            //         var buildFiveDay = $('#day' + i);
-            //         buildFiveDay.append(`<div>${nextDay}</div>`);
-            //         var futureWeatherIcon = data['daily'][i].weather[0]['icon'];
-            //         buildFiveDay.append(
-            //           `<img src="http://openweathermap.org/img/wn/${futureWeatherIcon}@2x.png" alt="weather icon" style="width:30px;height:30px;">`
-            //         );
-            //         buildFiveDay.append(
-            //           '<div>Temp: ' + data['daily'][i].temp.day + '°F</div>'
-            //         );
-            //         buildFiveDay.append(
-            //           '<div>Wind: ' + data['daily'][i].wind_speed + '</div>'
-            //         );
-            //         buildFiveDay.append(
-            //           '<div>Humidity: ' + data['daily'][i].humidity + '</div>'
-                   
-                  
-                });
-            };
-        
-        });
-   
-};
+function getWeather() {
+  var url = api + searchInput.value + "&units=imperial" + APIkey;
+  console.log(url);
+
+  fetch(url).then(function (response) {
+    if (response.ok) {
+      response.json().then((data) => {
+        var nameValue = data["name"];
+        var temp = data["main"]["temp"];
+        var wind = data["wind"]["speed"];
+        var humid = data["main"]["humidity"];
+        var desc = data["weather"][0]["description"];
+
+        document.getElementById("temp").innerHTML = temp + "°F";
+        document.getElementById("current-search-city").innerHTML = nameValue;
+        document.getElementById("wind").innerHTML = wind + "mph";
+        document.getElementById("humid").innerHTML = humid + "%";
+        document.getElementById("desc").innerHTML = desc;
+      });
+    }
+  });
+}
 
 //puts search value into localstorage
 function storeInput() {
-    localStorage.setItem("searches", JSON.stringify(searches));
+  localStorage.setItem("searches", JSON.stringify(searches));
 }
 
 //loads recent searches on page load
 function renderLastSearch() {
-   
-    recentList.innerHTML = "";
+  recentList.innerHTML = "";
 
-    for (var i = 0; i < searches.length; i++) {
-        var search = searches[i];
-        var newLi = document.createElement('a');
-        newLi.textContent = search;
-        newLi.classList.add("list-group-item-action");
-        newLi.classList.add("list-group-item");
-        newLi.setAttribute("data-index", i);
+  for (var i = 0; i < searches.length; i++) {
+    var search = searches[i];
+    var newLi = document.createElement("a");
+    newLi.textContent = search;
+    newLi.classList.add("list-group-item-action");
+    newLi.classList.add("list-group-item");
+    newLi.setAttribute("data-index", i);
 
-        recentList.appendChild(newLi);
-    }
-    
+    recentList.appendChild(newLi);
+  }
 }
 
-function init() { 
-    var lastSearch = JSON.parse(localStorage.getItem("searches"));
-    if (lastSearch !== null) {
-        searches = lastSearch;
-    }
+function init() {
+  var lastSearch = JSON.parse(localStorage.getItem("searches"));
+  if (lastSearch !== null) {
+    searches = lastSearch;
+  }
 
-    renderLastSearch();
+  renderLastSearch();
 }
 
-init()
+init();

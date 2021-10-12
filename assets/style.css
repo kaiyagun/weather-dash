@@ -1,0 +1,14 @@
+/* @media screen {
+    #id {
+        display: block;
+    }
+} */
+
+.card-body {
+    margin: 1px;
+}
+
+.list-group-item {
+    width: 100%;
+    padding: 0px;
+}
