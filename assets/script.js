@@ -7,13 +7,13 @@ var searchBtn = document.getElementById("search-btn");
 var APIkey = "&appid=47523fcfa432220823eeddae011ae353";
 var api = "https://api.openweathermap.org/data/2.5/weather?q=";
 
-var dayOne = $("#day-one");
-var dayTwo = $("#day-two");
-var dayThree = $("#day-three");
-var dayFour = $("#day-four");
-var dayFive = $("#day-five");
+var dayOne = $("#day1");
+var dayTwo = $("#day2");
+var dayThree = $("#day3");
+var dayFour = $("#day4");
+var dayFive = $("#day5");
 
-var fiveDays = [dayOne, dayTwo, dayThree, dayFour, dayFive];
+// var fiveDays = [dayOne, dayTwo, dayThree, dayFour, dayFive];
 
 //used to check function
 var searches = [];
@@ -48,15 +48,34 @@ function getLatLong () {
 
 //puts lat and long to get 5 day response, appends to cards
 function fiveDay() {
-    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&appid=47523fcfa432220823eeddae011ae353`).then(function (response) {
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=imperial&appid=47523fcfa432220823eeddae011ae353`).then(function (response) {
         if (response.ok) {
             response.json().then((data) => {
-                var day = moment(["list"]["dt"]).format("MMMM Do");
-                console.log(day);
-            })
-        }
-    })
-}
+                for (let i = 0; i < 5; i++) {
+                    const nextDay = moment()
+                    .add(i +1, 'd')
+                    .format('MMMM Do');
+                    var buildFiveDay = $('#day' + i);
+                    buildFiveDay.append(`<h5>${nextDay}</h5><hr>`);
+                    var futureWeatherIcon = data['daily'][i].weather[0]['icon'];
+                    console.log(futureWeatherIcon);
+                    buildFiveDay.append(
+                      '<div>Temp: ' + data['daily'][i].temp.day + '&deg;F</div><br>'
+                    );
+                    buildFiveDay.append(
+                      '<div>Wind: ' + data['daily'][i].wind_speed + 'mph</div><br>'
+                    );
+                    buildFiveDay.append(
+                      '<div>Humidity: ' + data['daily'][i].humidity + '%</div><br>'
+                    );
+
+                    
+                }
+                
+            });
+        };
+    });
+};
 
 function getWeather() {
   var url = api + searchInput.value + "&units=imperial" + APIkey;
